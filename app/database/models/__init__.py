@@ -1,0 +1,75 @@
+"""Все ORM-модели IrisV2. Импорт этого модуля регистрирует метаданные."""
+
+from app.database.models.economy import Inventory, ShopItem, Transaction, Wallet
+from app.database.models.games import Game, Quest, QuestProgress
+from app.database.models.moderation import Ban, Filter, ModerationLog, Role, UserRole, Warning
+from app.database.models.profiles import Achievement, UserAchievement, UserLevel, UserProfile
+from app.database.models.social import (
+    Family,
+    FamilyMember,
+    Friendship,
+    Gift,
+    Marriage,
+    Pet,
+    ReputationLog,
+)
+from app.database.models.system import (
+    AIHistory,
+    AuditLog,
+    Automation,
+    Giveaway,
+    GiveawayMember,
+    Poll,
+    PollVote,
+    Report,
+    ScheduledTask,
+    ShipperPair,
+    Ticket,
+    TicketMessage,
+)
+from app.database.models.users import Chat, ChatMember, ChatSettings, ChatStat, User, UserDayStat
+
+__all__ = [
+    "AIHistory",
+    "Achievement",
+    "AuditLog",
+    "Automation",
+    "Ban",
+    "Chat",
+    "ChatMember",
+    "ChatSettings",
+    "ChatStat",
+    "Family",
+    "FamilyMember",
+    "Filter",
+    "Friendship",
+    "Game",
+    "Gift",
+    "Giveaway",
+    "GiveawayMember",
+    "Inventory",
+    "Marriage",
+    "ModerationLog",
+    "Pet",
+    "Poll",
+    "PollVote",
+    "Quest",
+    "QuestProgress",
+    "Report",
+    "ReputationLog",
+    "Role",
+    "ScheduledTask",
+    "ShopItem",
+    "ShipperPair",
+    "Ticket",
+    "TicketMessage",
+    "Transaction",
+    "User",
+    "UserAchievement",
+    "UserLevel",
+    "UserProfile",
+    "UserRole",
+    "UserDayStat",
+    "Wallet",
+    "Warning",
+]

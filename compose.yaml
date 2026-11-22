@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-iris}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-iris}
+      POSTGRES_DB: ${POSTGRES_DB:-iris}
+      TZ: ${TZ:-Europe/Moscow}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-iris} -d ${POSTGRES_DB:-iris}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  bot:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      IRIS_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-iris}:${POSTGRES_PASSWORD:-iris}@db:5432/${POSTGRES_DB:-iris}
+      IRIS_REDIS_URL: redis://redis:6379/0
+      IRIS_ENV: prod
+      IRIS_LOG_JSON: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backups:/app/backups
+    stop_grace_period: 30s
+
+  backup:
+    image: postgres:16-alpine
+    profiles: ["tools"]
+    restart: "no"
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:-iris}
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER:-iris}
+      PGDATABASE: ${POSTGRES_DB:-iris}
+    volumes:
+      - ./backups:/backups
+    command: >
+      sh -c 'pg_dump --format=custom --file=/backups/iris_$$(date +%Y%m%d_%H%M%S).dump && echo "backup ok"'
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  redisdata:

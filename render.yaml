@@ -1,0 +1,68 @@
+services:
+  - type: web
+    name: irisv2
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: IRIS_ENV
+        value: prod
+      - key: IRIS_LOG_JSON
+        value: "true"
+      - key: IRIS_TIMEZONE
+        value: Europe/Moscow
+      - key: IRIS_WEBHOOK_ENABLED
+        value: "true"
+      - key: IRIS_WEBHOOK_SECRET
+        generateValue: true
+      - key: IRIS_WEBHOOK_PATH
+        value: /telegram/webhook
+      - key: IRIS_SCHEDULER_TICK
+        value: "60"
+      - key: IRIS_DB_POOL_SIZE
+        value: "2"
+      - key: IRIS_DB_MAX_OVERFLOW
+        value: "2"
+      - key: IRIS_DB_POOL_RECYCLE
+        value: "300"
+      - key: IRIS_AI_ENABLED
+        value: "true"
+      - key: MALLOC_ARENA_MAX
+        value: "2"
+      - key: IRIS_BOT_TOKEN
+        sync: false
+      - key: IRIS_BOT_USERNAME
+        sync: false
+      - key: IRIS_OWNER_IDS
+        sync: false
+      - key: IRIS_SUPPORT_CHAT_ID
+        sync: false
+      - key: IRIS_DATABASE_URL
+        sync: false
+      # Ключи ИИ добавляются в Dashboard (sync: false), чтобы не хранить их в git.
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_API_KEY_2
+        sync: false
+      - key: GROQ_MODEL
+        value: openai/gpt-oss-120b
+      - key: GROQ_MODEL_FALLBACK
+        value: qwen/qwen3.8-27b
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_API_KEY_2
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: nvidia/nemotron-3-ultra-550b-a55b:free
+      - key: TOKENHARBOR_API_KEY
+        sync: false
+      - key: TOKENHARBOR_MODEL
+        value: deepseek-v4.1-flash:free
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODELS
+        value: gemini-3.5-flash-lite,gemini-3.1-flash-lite,gemini-3.5-flash,gemini-3.6-flash
+      - key: POLLINATIONS_MODEL
+        value: openai
